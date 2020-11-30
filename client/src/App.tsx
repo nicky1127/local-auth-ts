@@ -12,10 +12,10 @@ function App() {
     <BrowserRouter>
       <NavBar />
       <Switch>
-        <Route path="/" exact componet={HomePage} />
-        <Route path="/admin" exact componet={AdminPage} />
-        <Route path="/login" exact componet={Login} />
-        <Route path="/profile" exact componet={Profile} />
+        <Route path="/" exact component={HomePage} />
+        <Route path="/admin" component={AdminPage} />
+        <Route path="/login" component={Login} />
+        <Route path="/profile" component={Profile} />
       </Switch>
     </BrowserRouter>
   );
