@@ -1,15 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { myContext } from "../pages/Context";
 
 export default function NavBar() {
+  const ctx = useContext(myContext);
   return (
     <div className="NavContainer">
-      <Link to="/logout">Logout</Link>
-      <Link to="/home">Home</Link>
-      <Link to="/profile">Profile</Link>
-      <Link to="/admin">Admin</Link>
-      <Link to="/login">Login</Link>
-      <Link to="/register">Register</Link>
+      {ctx ? (
+        <>
+          <Link to="/logout">Logout</Link>
+          {ctx.isAdmin && <Link to="/admin">Admin</Link>}
+          <Link to="/profile">Profile</Link>
+        </>
+      ) : (
+        <>
+          <Link to="/login">Login</Link>
+          <Link to="/register">Register</Link>
+        </>
+      )}
+      <Link to="/">Home</Link>
     </div>
   );
 }

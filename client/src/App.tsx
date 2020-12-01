@@ -6,17 +6,20 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import AdminPage from "./pages/AdminPage";
 import "./main.css";
+import Context from "./pages/Context";
 
 function App() {
   return (
     <BrowserRouter>
-      <NavBar />
-      <Switch>
-        <Route path="/" exact component={HomePage} />
-        <Route path="/admin" component={AdminPage} />
-        <Route path="/login" component={Login} />
-        <Route path="/profile" component={Profile} />
-      </Switch>
+      <Context>
+        <NavBar />
+        <Switch>
+          <Route path="/" exact component={HomePage} />
+          <Route path="/admin" component={AdminPage} />
+          <Route path="/login" component={Login} />
+          <Route path="/profile" component={Profile} />
+        </Switch>
+      </Context>
     </BrowserRouter>
   );
 }
