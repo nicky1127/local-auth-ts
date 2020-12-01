@@ -11,6 +11,8 @@ import dotenv from "dotenv";
 import User from './User'
 import { UserInterface } from "./interfaces/UserInterface";
 
+const LocalStrategy = passportLocal.Strategy
+
 mongoose.connect("mongodb+srv://admin-user:Nnwakefield@cluster0.v57xd.mongodb.net/<dbname>?retryWrites=true&w=majority", {
 	useCreateIndex: true,
 	useNewUrlParser: true,
@@ -36,11 +38,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //Passport
-passport.use(new passportLocal.Strategy((username, password, done) => {
+passport.use(new LocalStrategy((username: string, password: string, done) => {
 	User.findOne({ username: username }, (err, user: any) => {
 		if (err) throw err;
 		if (!user) return done(null, false);
-		bcrypt.compare(password, user.password, (err, result) => {
+		bcrypt.compare(password, user.password, (err, result: boolean) => {
 			if (err) throw err;
 			if (result === true) {
 				return done(null, user);
@@ -52,13 +54,14 @@ passport.use(new passportLocal.Strategy((username, password, done) => {
 }))
 
 passport.serializeUser((user: any, cb) => {
-	cb(null, user.id)
+	cb(null, user._id)
 })
 passport.deserializeUser((id: string, cb) => {
 	User.findOne({ _id: id }, (err, user: any) => {
 		const userInformation = {
 			username: user.username,
-			isAdmin: user.isAdmin
+			isAdmin: user.isAdmin,
+			id: user._id
 
 		};
 		cb(err, userInformation)
@@ -86,20 +89,39 @@ app.post('/register', async (req: Request, res: Response) => {
 			})
 
 			await newUser.save()
-			res.send("Success")
+			res.send("success")
 		}
 	});
 });
 
 
-app.post("/login", passport.authenticate("local", (req, res) => {
-	res.send("Successfully Autehnticated")
-}));
+app.post("/login", passport.authenticate("local"), (req, res) => {
+	res.send("success")
+});
 
 app.get('/user', (req, res) => {
 	res.send(req.user)
 })
 
+app.get('/logout', (req, res) => {
+	req.logout();
+	res.send("success")
+})
+
+app.post("/deleteuser", async (req, res) => {
+	const { id } = req.body;
+	await User.findByIdAndDelete(id, (err: Error) => {
+		if (err) throw err;
+	})
+	res.send("success");
+})
+
+app.get("/getallusers", async (req, res) => {
+	await User.find({}, (err: Error, data: UserInterface[]) => {
+		if (err) throw err;
+		res.send(data)
+	})
+})
 
 app.listen(4000, () => {
 	console.log('Server started')
