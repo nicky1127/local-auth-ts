@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import NavBar from "./components/NavBar";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
@@ -6,20 +6,29 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import AdminPage from "./pages/AdminPage";
 import "./main.css";
-import Context from "./pages/Context";
+import { myContext } from "./pages/Context";
+import Register from "./pages/Register";
 
 function App() {
+  const ctx = useContext(myContext);
+  console.log("ctx in App", ctx);
   return (
     <BrowserRouter>
-      <Context>
-        <NavBar />
-        <Switch>
-          <Route path="/" exact component={HomePage} />
-          <Route path="/admin" component={AdminPage} />
-          <Route path="/login" component={Login} />
-          <Route path="/profile" component={Profile} />
-        </Switch>
-      </Context>
+      <NavBar />
+      <Switch>
+        <Route path="/" exact component={HomePage} />
+        {ctx ? (
+          <>
+            {ctx.isAdmin && <Route path="/admin" component={AdminPage} />}
+            <Route path="/profile" component={Profile} />
+          </>
+        ) : (
+          <>
+            <Route path="/login" component={Login} />
+            <Route path="/register" component={Register} />
+          </>
+        )}
+      </Switch>
     </BrowserRouter>
   );
 }
