@@ -11,7 +11,7 @@ import Register from "./pages/Register";
 
 function App() {
   const ctx = useContext(myContext);
-  console.log("ctx in App", ctx);
+
   return (
     <BrowserRouter>
       <NavBar />

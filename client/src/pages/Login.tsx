@@ -16,17 +16,9 @@ export default function Login() {
         { withCredentials: true }
       )
       .then((res) => {
-        console.log(res.data);
-      });
-  };
-
-  const getUser = () => {
-    axios
-      .get("http://localhost:4000/user", {
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res.data);
+        if (res.data === "success") {
+          window.location.href = "/";
+        }
       });
   };
 
@@ -44,7 +36,6 @@ export default function Login() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={login}>Login</button>
-      <button onClick={getUser}>Get User that's Logged in</button>
     </div>
   );
 }
